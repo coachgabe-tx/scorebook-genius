@@ -22,9 +22,13 @@
    follows the device's prefers-color-scheme (see the head script).
    --red is the text accent: deep in day mode (white text also passes
    on it for filled buttons), light in night mode — so filled buttons
-   switch to dark text via --on-fill to keep AA contrast. */
+   switch to dark text via --on-fill to keep AA contrast.
+   Night accent is a bold true red (#FF6055, hue ~4°, from the #FF3B30
+   family brightened until it clears AA on every night background —
+   worst case 4.53:1 on --surface2); the old rose accents
+   (hue ~352°) read pink. Day red #C8102E is unchanged. */
 html[data-theme="dark"]{
-  --bg:#081426; --surface:#0F2140; --surface2:#162E56; --ink:#FFFFFF; --muted:#A9B8CC; --line:#243A5E; --red:#FF7285; --red-bg:#2A1220;
+  --bg:#081426; --surface:#0F2140; --surface2:#162E56; --ink:#FFFFFF; --muted:#A9B8CC; --line:#243A5E; --red:#FF6055; --red-bg:#2A1220; --bright:#FF6055;
   --on-fill:#0A1628;
   color-scheme:dark;
 }
@@ -45,7 +49,7 @@ html[data-theme="dark"][data-sport="volleyball"]{--red:#38BDF8;--red-bg:#0A2436}
 html[data-theme="dark"][data-sport="football"]{--red:#FBBF24;--red-bg:#241503}
 html[data-theme="dark"][data-sport="hockey"]{--red:#38BDF8;--red-bg:#0A2436}
 html[data-theme="dark"][data-sport="field-hockey"]{--red:#A3E635;--red-bg:#16240A}
-html[data-theme="dark"][data-sport="lacrosse"]{--red:#F472B6;--red-bg:#2A0A18}
+html[data-theme="dark"][data-sport="lacrosse"]{--red:#FF6055;--red-bg:#2A0A18;--bright:#FF6055}
 html[data-theme="dark"][data-sport="rugby"]{--red:#D6D3D1;--red-bg:#24211F}
 html[data-theme="dark"][data-sport="water-polo"]{--red:#60A5FA;--red-bg:#0D1B36}
 *{box-sizing:border-box}
