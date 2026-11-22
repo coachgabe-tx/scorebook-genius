@@ -1,9 +1,10 @@
 <!doctype html>
-<html lang="en" data-sport="baseball">
+<html lang="en" data-sport="baseball" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
+<script>(function(){var t='light';try{var s=localStorage.getItem('scorebook-genius-theme');if(s==='dark'||s==='light'){t=s;}else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){t='dark';}}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script>
 <link rel="icon" href="data:,">
 <title>Scorebook Genius — The call, before the next pitch</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,33 +13,41 @@
 :root{
   --bg:#FFFFFF; --surface:#FFFFFF; --surface2:#F2F5F8; --ink:#0E223F; --muted:#5B6B82; --line:#E2E8F0;
   --navy:#0A2342; --red:#C8102E; --red-bg:#FFF1F2; --bright:#FF5A6E;
+  --on-fill:#FFFFFF;
   --radius:16px;
+  color-scheme:light;
 }
-@media (prefers-color-scheme: dark){
-  :root{ --bg:#081426; --surface:#0F2140; --surface2:#162E56; --ink:#FFFFFF; --muted:#A9B8CC; --line:#243A5E; --red:#FF5A6E; --red-bg:#2A1220; }
+/* Night mode — set by the header toggle (data-theme on <html>), which
+   overrides the OS preference. A first visit with no saved choice
+   follows the device's prefers-color-scheme (see the head script).
+   --red is the text accent: deep in day mode (white text also passes
+   on it for filled buttons), light in night mode — so filled buttons
+   switch to dark text via --on-fill to keep AA contrast. */
+html[data-theme="dark"]{
+  --bg:#081426; --surface:#0F2140; --surface2:#162E56; --ink:#FFFFFF; --muted:#A9B8CC; --line:#243A5E; --red:#FF7285; --red-bg:#2A1220;
+  --on-fill:#0A1628;
+  color-scheme:dark;
 }
 /* Sport themes — the sport picked in the header recolors the whole page.
    "baseball" (the default) keeps the original navy/red. */
 html[data-sport="basketball"]{--navy:#7C2D12;--red:#C2410C;--red-bg:#FDF0E7;--bright:#FFA94D}
 html[data-sport="soccer"]{--navy:#14532D;--red:#15803D;--red-bg:#EDF7EE;--bright:#4ADE80}
 html[data-sport="volleyball"]{--navy:#075985;--red:#0369A1;--red-bg:#EBF5FB;--bright:#7DD3FC}
-html[data-sport="football"]{--navy:#4A2511;--red:#B45309;--red-bg:#FAF1E3;--bright:#FCD34D}
-html[data-sport="hockey"]{--navy:#0B2536;--red:#0284C7;--red-bg:#EAF6FB;--bright:#7DD3FC}
+html[data-sport="football"]{--navy:#4A2511;--red:#92400E;--red-bg:#FAF1E3;--bright:#FCD34D}
+html[data-sport="hockey"]{--navy:#0B2536;--red:#0369A1;--red-bg:#EAF6FB;--bright:#7DD3FC}
 html[data-sport="field-hockey"]{--navy:#1A3A0A;--red:#4D7C0F;--red-bg:#F0F7E4;--bright:#A3E635}
 html[data-sport="lacrosse"]{--navy:#500724;--red:#BE185D;--red-bg:#FDF0F5;--bright:#F9A8D4}
-html[data-sport="rugby"]{--navy:#1C1917;--red:#78716C;--red-bg:#F2F0ED;--bright:#D6D3D1}
+html[data-sport="rugby"]{--navy:#1C1917;--red:#57534E;--red-bg:#F2F0ED;--bright:#D6D3D1}
 html[data-sport="water-polo"]{--navy:#172554;--red:#2563EB;--red-bg:#EBF0FE;--bright:#93C5FD}
-@media (prefers-color-scheme: dark){
-  html[data-sport="basketball"]{--red:#FF9A62;--red-bg:#2A1503}
-  html[data-sport="soccer"]{--red:#4ADE80;--red-bg:#0E2417}
-  html[data-sport="volleyball"]{--red:#38BDF8;--red-bg:#0A2436}
-  html[data-sport="football"]{--red:#FBBF24;--red-bg:#241503}
-  html[data-sport="hockey"]{--red:#38BDF8;--red-bg:#0A2436}
-  html[data-sport="field-hockey"]{--red:#A3E635;--red-bg:#16240A}
-  html[data-sport="lacrosse"]{--red:#F472B6;--red-bg:#2A0A18}
-  html[data-sport="rugby"]{--red:#D6D3D1;--red-bg:#24211F}
-  html[data-sport="water-polo"]{--red:#60A5FA;--red-bg:#0D1B36}
-}
+html[data-theme="dark"][data-sport="basketball"]{--red:#FF9A62;--red-bg:#2A1503}
+html[data-theme="dark"][data-sport="soccer"]{--red:#4ADE80;--red-bg:#0E2417}
+html[data-theme="dark"][data-sport="volleyball"]{--red:#38BDF8;--red-bg:#0A2436}
+html[data-theme="dark"][data-sport="football"]{--red:#FBBF24;--red-bg:#241503}
+html[data-theme="dark"][data-sport="hockey"]{--red:#38BDF8;--red-bg:#0A2436}
+html[data-theme="dark"][data-sport="field-hockey"]{--red:#A3E635;--red-bg:#16240A}
+html[data-theme="dark"][data-sport="lacrosse"]{--red:#F472B6;--red-bg:#2A0A18}
+html[data-theme="dark"][data-sport="rugby"]{--red:#D6D3D1;--red-bg:#24211F}
+html[data-theme="dark"][data-sport="water-polo"]{--red:#60A5FA;--red-bg:#0D1B36}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:"Barlow",system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
 button{font-family:inherit;cursor:pointer;min-height:52px}
@@ -46,7 +55,14 @@ button{font-family:inherit;cursor:pointer;min-height:52px}
 .top-in{max-width:680px;margin:0 auto;padding:12px 20px 10px;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .logo{font-family:"Barlow Condensed",sans-serif;font-weight:800;letter-spacing:.04em;font-size:24px;line-height:1;color:#fff}
 .logo span{color:var(--bright)}
-.sportbar{max-width:680px;margin:0 auto;padding:0 20px 14px;display:flex;align-items:center;gap:10px}
+.sportbar{max-width:680px;margin:0 auto;padding:0 20px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sport-picker{display:flex;align-items:center;gap:10px;min-width:0}
+.theme-toggle{flex:none;width:44px;height:44px;min-height:44px;border-radius:999px;border:1.5px solid rgba(255,255,255,.55);background:rgba(255,255,255,.14);color:#fff;display:flex;align-items:center;justify-content:center;padding:0}
+.theme-toggle svg{width:20px;height:20px;display:block}
+.theme-toggle .icon-sun{display:none}
+html[data-theme="dark"] .theme-toggle .icon-sun{display:block}
+html[data-theme="dark"] .theme-toggle .icon-moon{display:none}
+.theme-toggle:active{background:rgba(255,255,255,.28)}
 .sport-label{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.75);flex:none}
 .sport-select{background:rgba(255,255,255,.14);color:#fff;border:1.5px solid rgba(255,255,255,.4);border-radius:10px;padding:10px 12px;font-size:16px;font-weight:600;font-family:inherit;min-height:44px;max-width:100%}
 .sport-select option{color:#0E223F;background:#fff}
@@ -105,15 +121,15 @@ button{font-family:inherit;cursor:pointer;min-height:52px}
 
 /* Close call — floating button (bottom-left, opposite the Top button)
    opens a floating panel that can be reached from anywhere on the page */
-.close-fab{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:70;background:var(--red);color:#fff;border:none;border-radius:999px;padding:12px 18px;font-weight:700;font-size:15px;line-height:1;min-height:48px;display:flex;align-items:center;gap:6px;box-shadow:0 6px 20px rgba(0,0,0,.28)}
-.close-fab:active{background:var(--navy)}
-.close-fab[aria-expanded="true"]{background:var(--navy)}
+.close-fab{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:70;background:var(--red);color:var(--on-fill);border:none;border-radius:999px;padding:12px 18px;font-weight:700;font-size:15px;line-height:1;min-height:48px;display:flex;align-items:center;gap:6px;box-shadow:0 6px 20px rgba(0,0,0,.28)}
+.close-fab:active{background:var(--navy);color:#fff}
+.close-fab[aria-expanded="true"]{background:var(--navy);color:#fff}
 .close-backdrop{position:fixed;inset:0;background:rgba(8,20,38,.45);z-index:64}
 .close-backdrop[hidden]{display:none}
 .close-sheet{position:fixed;left:16px;right:16px;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:69;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:0 18px 50px rgba(10,35,66,.35);padding:20px;max-height:min(72vh,640px);overflow-y:auto;-webkit-overflow-scrolling:touch;display:none}
 .close-sheet.open{display:block}
 @media(min-width:640px){.close-sheet{right:auto;width:520px;max-width:calc(100vw - 32px)}}
-@media(prefers-color-scheme:dark){.close-sheet{box-shadow:0 18px 50px rgba(0,0,0,.6)}}
+html[data-theme="dark"] .close-sheet{box-shadow:0 18px 50px rgba(0,0,0,.6)}
 .close-sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
 .close-sheet-head strong{font-size:19px;line-height:1.2;display:block;color:var(--ink)}
 .close-sheet-head small{display:block;font-weight:400;color:var(--muted);font-size:14px;margin-top:4px;line-height:1.4}
@@ -122,23 +138,23 @@ button{font-family:inherit;cursor:pointer;min-height:52px}
 .matrix-item{display:flex;flex-direction:column;scroll-margin-top:16px}
 .matrix-choice{width:100%;text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:16px 18px;font-size:16px;font-weight:600;color:var(--ink);line-height:1.3}
 .matrix-choice.active{border-color:var(--navy);background:var(--navy);color:#fff}
-@media(prefers-color-scheme:dark){.matrix-choice.active{border-color:var(--red);background:var(--red)}}
+html[data-theme="dark"] .matrix-choice.active{border-color:var(--red);background:var(--red);color:var(--on-fill)}
 .matrix-panel{display:block;background:var(--navy);color:#fff;padding:22px;border-radius:16px;margin-top:10px}
-@media(prefers-color-scheme:dark){.matrix-panel{background:#13294D}}
+html[data-theme="dark"] .matrix-panel{background:#13294D}
 .matrix-kicker{font-size:11px;letter-spacing:.09em;text-transform:uppercase;opacity:.75}
 .matrix-q{font-size:21px;font-weight:700;line-height:1.35;margin-top:10px}
 .matrix-sub{opacity:.88;margin-top:10px;font-size:15px;line-height:1.6}
 .matrix-actions{display:flex;gap:10px;margin-top:20px}
 .matrix-actions button{flex:1;border-radius:12px;border:0;padding:15px;font-weight:800;font-size:16px}
-.btn-yes{background:var(--red);color:#fff}.btn-no{background:#fff;color:var(--navy)}.btn-reset{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45)!important;flex:0 0 auto !important;padding-left:16px;padding-right:16px}
+.btn-yes{background:var(--red);color:var(--on-fill)}.btn-no{background:#fff;color:var(--navy)}.btn-reset{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45)!important;flex:0 0 auto !important;padding-left:16px;padding-right:16px}
 .verdict{font-size:23px;font-weight:800;line-height:1.3}
 
 .divider{display:flex;align-items:center;gap:14px;margin:44px 0 0;color:var(--muted);font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
 .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
 
 .back-top{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:60;background:var(--navy);color:#fff;border:none;border-radius:999px;padding:12px 18px;font-weight:700;font-size:15px;line-height:1;min-height:48px;display:flex;align-items:center;gap:6px;box-shadow:0 6px 20px rgba(10,35,66,.30)}
-.back-top:active{background:var(--red)}
-@media(prefers-color-scheme:dark){.back-top{background:var(--red);box-shadow:0 6px 20px rgba(0,0,0,.45)}}
+.back-top:active{background:var(--red);color:var(--on-fill)}
+html[data-theme="dark"] .back-top{background:var(--red);color:var(--on-fill);box-shadow:0 6px 20px rgba(0,0,0,.45)}
 
 footer{margin-top:56px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:14px;line-height:1.65}
 footer p{margin:0 0 10px}
@@ -146,7 +162,7 @@ footer p:last-child{margin:0}
 </style>
 </head>
 <body>
-<header class="top"><div class="top-in"><div class="logo">SCOREBOOK <span>GENIUS</span></div><div class="badge">Unofficial guide</div></div><div class="sportbar"><label class="sport-label" for="sportSelect">Sport</label><select class="sport-select" id="sportSelect" aria-label="Choose your sport"></select></div></header>
+<header class="top"><div class="top-in"><div class="logo">SCOREBOOK <span>GENIUS</span></div><div class="badge">Unofficial guide</div></div><div class="sportbar"><div class="sport-picker"><label class="sport-label" for="sportSelect">Sport</label><select class="sport-select" id="sportSelect" aria-label="Choose your sport"></select></div><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to night mode" aria-pressed="false"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button></div></header>
 
 <main class="wrap">
   <section class="hero">
@@ -442,6 +458,35 @@ function renderMatrix(){
   if(!btn) return;
   var reduce=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   btn.addEventListener('click', function(){ window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'}); });
+})();
+
+/* Day / night toggle — top-right of the header, opposite the Sport
+   picker. It only flips data-theme on <html> and saves the choice, so
+   switching never resets the picked sport, an open answer, or the
+   Close Call panel. With no saved choice it follows the OS setting. */
+(function(){
+  var btn=document.getElementById('themeToggle');
+  if(!btn) return;
+  var KEY='scorebook-genius-theme';
+  function saved(){ try{ return localStorage.getItem(KEY); }catch(e){ return null; } }
+  function sync(){
+    var dark=document.documentElement.getAttribute('data-theme')==='dark';
+    btn.setAttribute('aria-label', dark?'Switch to day mode':'Switch to night mode');
+    btn.setAttribute('aria-pressed', dark?'true':'false');
+  }
+  btn.addEventListener('click', function(){
+    var next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try{ localStorage.setItem(KEY, next); }catch(e){}
+    sync();
+  });
+  if(window.matchMedia){
+    var mq=window.matchMedia('(prefers-color-scheme: dark)');
+    var onChange=function(e){ if(!saved()){ document.documentElement.setAttribute('data-theme', e.matches?'dark':'light'); sync(); } };
+    if(mq.addEventListener) mq.addEventListener('change', onChange);
+    else if(mq.addListener) mq.addListener(onChange);
+  }
+  sync();
 })();
 
 buildSportSelect(); applySportChrome(); renderGrid(); renderSituations(); renderMatrix();
