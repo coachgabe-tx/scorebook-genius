@@ -7,6 +7,15 @@
 <script>(function(){var t='light';try{var s=localStorage.getItem('scorebook-genius-theme');if(s==='dark'||s==='light'){t=s;}else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){t='dark';}}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script>
 <link rel="icon" href="data:,">
 <title>Scorebook Genius — The call, before the next pitch</title>
+<!-- Google Analytics 4 — page views, visitor counts, and the custom
+     events fired by track() in the app script below. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR9LNJV4X0"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-ZR9LNJV4X0');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -163,6 +172,7 @@ html[data-theme="dark"] .back-top{background:var(--red);color:var(--on-fill);box
 footer{margin-top:56px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:14px;line-height:1.65}
 footer p{margin:0 0 10px}
 footer p:last-child{margin:0}
+.feedback-link{color:var(--red);font-weight:600;text-decoration:underline}
 </style>
 </head>
 <body>
@@ -194,6 +204,7 @@ footer p:last-child{margin:0}
   <footer>
     <p>Wrong entry? Most plays can still be fixed after a game is final — tap <button type="button" class="foot-link" onclick="openAnswer('edit-after-final')">“The game is already final — can I still fix a play?”</button> to see how.</p>
     <p>Answers grounded in the Official Baseball Rules (Rule 9), the FIBA Statisticians’ Manual, the IFAB Laws of the Game, the NCAA Volleyball Statisticians’ Manual, and the GameChanger Help Center. Your league’s local rules always win.</p>
+    <p><a class="feedback-link" id="feedbackLink" href="https://docs.google.com/forms/d/e/1FAIpQLSejNEcL8exBzuBQm2O4uztX9ot98_zG100_-8ZvGWazTr7O-g/viewform" target="_blank" rel="noopener">Did this save you tonight? Tell us in 10 seconds →</a></p>
     <p>Scorebook Genius is an unofficial guide. It is not affiliated with, endorsed by, or sponsored by GameChanger Media, Inc. or DICK'S Sporting Goods. GameChanger is a trademark of GameChanger Media, Inc.</p>
   </footer>
 </main>
@@ -276,6 +287,15 @@ const sportSelect=document.getElementById('sportSelect');
 
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 
+/* Analytics events — every call goes through track(), which only calls
+   gtag when it actually loaded, so a blocked or failed analytics script
+   can never break the app. Events: answer_opened (answer_id, sport),
+   sport_selected (sport), close_call_opened, feedback_clicked. */
+function track(name, params){
+  if(typeof gtag !== 'function') return;
+  try{ gtag('event', name, params || {}); }catch(e){}
+}
+
 /* Sport picker — lives in the header, top-left. Picking a sport recolors
    the page (data-sport on <html>) and filters everything to that sport.
    Entries tagged "All sports" apply to every sport, so they stay visible
@@ -283,7 +303,7 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
 function buildSportSelect(){
   sportSelect.innerHTML=GROUPS.map(g=>`<option value="${g.key}">${g.label}</option>`).join('');
   sportSelect.value=activeGroup;
-  sportSelect.onchange=()=>setSport(sportSelect.value);
+  sportSelect.onchange=()=>{ track('sport_selected',{sport:sportSelect.value}); setSport(sportSelect.value); };
 }
 /* Per-sport moment — "next pitch" is baseball/softball language, so
    the hero subline and the browser title name the real next moment
@@ -316,6 +336,7 @@ function setSport(key){
 }
 window.openAnswer=function(id){
   if(!BY_ID[id]) return;
+  track('answer_opened',{answer_id:id, sport:activeGroup});
   focusId=id; expandedId=null; renderGrid();
   setTimeout(()=>{document.getElementById('answerArea').scrollIntoView({behavior:'smooth',block:'start'});},60);
 };
@@ -361,6 +382,7 @@ function renderGrid(){
 
 window.toggleRow=function(id){
   expandedId = expandedId===id ? null : id;
+  if(expandedId===id) track('answer_opened',{answer_id:id, sport:activeGroup});
   renderGrid();
   if(expandedId){
     setTimeout(()=>{const el=document.getElementById('card-'+id); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});},40);
@@ -392,6 +414,7 @@ function renderSituations(){
     if(s.matrix){openMatrix(s.matrix);return;}
     const item=BY_ID[s.id];
     if(item && item.group!=="all"){ activeGroup=item.group; applySportChrome(); }
+    track('answer_opened',{answer_id:s.id, sport:activeGroup});
     focusId=s.id; expandedId=null; renderGrid(); renderSituations(); renderMatrix();
     setTimeout(()=>{document.getElementById('answerArea').scrollIntoView({behavior:'smooth',block:'start'});},60);
   });
@@ -404,6 +427,7 @@ document.getElementById('moreSitBtn').onclick=()=>{showAllSit=true;renderSituati
 const tabsEl=document.getElementById('matrixTabs');
 const matrixArea=document.getElementById('matrixArea'), closeFab=document.getElementById('closeFab'), closeBackdrop=document.getElementById('closeBackdrop'), closeSheetBtn=document.getElementById('closeSheetBtn');
 function setMatrixOpen(open){
+  if(open && !matrixOpen) track('close_call_opened',{sport:activeGroup});
   matrixOpen=open;
   matrixArea.classList.toggle('open',open);
   closeBackdrop.hidden=!open;
@@ -453,8 +477,9 @@ function renderMatrix(){
   if(resetBtn) resetBtn.onclick=()=>{mStep=0;renderMatrix();};
   if(typeof mStep==='string') return;
   const s=m.steps[mStep];
-  document.getElementById('mYes').onclick=()=>{mStep=resolveStep(s.yes,mStep);renderMatrix();};
-  document.getElementById('mNo').onclick=()=>{mStep=resolveStep(s.no,mStep);renderMatrix();};
+  const verdictTrack=()=>{ if(typeof mStep==='string') track('answer_opened',{answer_id:mKey, sport:activeGroup}); };
+  document.getElementById('mYes').onclick=()=>{mStep=resolveStep(s.yes,mStep);verdictTrack();renderMatrix();};
+  document.getElementById('mNo').onclick=()=>{mStep=resolveStep(s.no,mStep);verdictTrack();renderMatrix();};
 }
 /* Back to top — always visible, one tap back up */
 (function(){
@@ -492,6 +517,9 @@ function renderMatrix(){
   }
   sync();
 })();
+
+const feedbackLink=document.getElementById('feedbackLink');
+if(feedbackLink) feedbackLink.addEventListener('click',()=>track('feedback_clicked',{sport:activeGroup}));
 
 buildSportSelect(); applySportChrome(); renderGrid(); renderSituations(); renderMatrix();
 </script>
