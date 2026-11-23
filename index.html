@@ -170,8 +170,8 @@ footer p:last-child{margin:0}
 
 <main class="wrap">
   <section class="hero">
-    <h1>The call,<br>before the <em id="heroPhrase">next pitch.</em></h1>
-    <p>Tap what happened. Get the call.</p>
+    <h1>Every scorebook question —<br>answered in <em>under 10 seconds.</em></h1>
+    <p>Tap what happened. Get the call before the <span id="heroPhrase">next pitch.</span></p>
   </section>
 
   <section class="section" aria-labelledby="sitTitle">
@@ -285,10 +285,10 @@ function buildSportSelect(){
   sportSelect.value=activeGroup;
   sportSelect.onchange=()=>setSport(sportSelect.value);
 }
-/* Hero tagline — "next pitch" is baseball/softball language, so the
-   second line names the real next moment of the sport picked: the
-   pitch, possession, kickoff, serve, snap, faceoff, pushback, draw,
-   scrum, or swim-off. No generic stand-in. */
+/* Per-sport moment — "next pitch" is baseball/softball language, so
+   the hero subline and the browser title name the real next moment
+   of the sport picked: the pitch, possession, kickoff, serve, snap,
+   faceoff, pushback, draw, scrum, or swim-off. No generic stand-in. */
 const TAGLINES={
   baseball:"next pitch.",
   basketball:"next possession.",
